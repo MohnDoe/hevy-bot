@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Guild" ALTER COLUMN "guildId" SET DATA TYPE TEXT,
+ALTER COLUMN "channelId" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "discordId" SET DATA TYPE TEXT;
