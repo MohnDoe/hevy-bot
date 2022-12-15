@@ -6,7 +6,8 @@ const {
 } = require('discord.js')
 
 const { checkIfUserFollowingBot, followUser } = require('../hevy/api')
-const { verifyUser } = require('../modules/user')
+const { upsertGuild } = require('../modules/guild')
+const { verifyUser, upsertUser, connectGuild } = require('../modules/user')
 
 const ConfirmButtonId = 'confirmButton'
 
@@ -34,6 +35,14 @@ module.exports = {
       .trim()
       .toLowerCase()
     const userId = interaction.user.id
+    const guildId = interaction.guild.id
+
+    console.log(interaction.guild)
+    console.log(interaction.user)
+
+    await upsertUser(userId)
+    await upsertGuild(guildId)
+    await connectGuild(userId, guildId)
 
     // check if Discord user exist in DB
     const sentMessage = await interaction.reply({
@@ -56,7 +65,6 @@ module.exports = {
       //if success
       if (didFollow) {
         await followUser(targetHevyUser)
-        // add user link to DB
         await verifyUser(userId, targetHevyUser)
         await i.update({
           content: 'You are all set.',

@@ -13,58 +13,45 @@ const localizedFormat = require('dayjs/plugin/localizedFormat')
 dayjs.extend(relativeTime)
 dayjs.extend(duration)
 dayjs.extend(localizedFormat)
-const { getByDiscordId } = require('../modules/user')
+const { getById } = require('../modules/user')
 const { getUserLatestWorkout, getUserWorkouts } = require('../hevy/api')
-
-// const formatDuration = (minutes) => {
-//   const dayJSduration = dayjs.duration(minutes, 'minutes')
-//   const nbDays = dayJSduration.get('day')
-//   const nbMinutes = dayJSduration.get('minute')
-//   const dynamicFormats = [!!nbDays && 'H[h]', !!nbMinutes && 'm[m]']
-//     .filter(Boolean)
-//     .join(' ')
-
-//   return dayJSduration.format(dynamicFormats)
-// }
 
 const embedWorkout = (w) => {
   console.log(w)
-  return (
-    new EmbedBuilder()
-      .setTitle(w.name)
-      .setURL(`https://www.hevy.com/workout/${w.short_id}`)
-      .setAuthor({
-        name: w.username,
-        iconURL: w.profile_image,
-        url: `https://www.hevy.com/user/${w.username}`,
-      })
-      .setDescription(
-        w.description
-          ? w.description.trim().length != 0
-            ? w.description
-            : null
+  return new EmbedBuilder()
+    .setTitle(w.name)
+    .setURL(`https://www.hevy.com/workout/${w.short_id}`)
+    .setAuthor({
+      name: w.username,
+      iconURL: w.profile_image,
+      url: `https://www.hevy.com/user/${w.username}`,
+    })
+    .setDescription(
+      w.description
+        ? w.description.trim().length != 0
+          ? w.description
           : null
-      )
-      // .addFields(
-      //   {
-      //     name: 'Duration',
-      //     value: formatDuration(w.end_time - w.start_time),
-      //     inline: true,
-      //   },
-      //   {
-      //     name: 'Volume',
-      //     value: '10Kg',
-      //     inline: true,
-      //   },
-      //   {
-      //     name: 'PRs',
-      //     value: '12 🏆',
-      //     inline: true,
-      //   }
-      // )
-      .addFields(w.exercises.map((e) => exerciseToField(e)))
-      .setTimestamp(new Date(w.created_at))
-  )
+        : null
+    )
+    .addFields(
+      {
+        name: 'Duration',
+        value: '1h23m',
+        inline: true,
+      },
+      {
+        name: 'Volume',
+        value: '10Kg',
+        inline: true,
+      },
+      {
+        name: 'PRs',
+        value: '12 🏆',
+        inline: true,
+      }
+    )
+    .addFields(w.exercises.map((e) => exerciseToField(e)))
+    .setTimestamp(new Date(w.created_at))
 }
 
 const setToString = (s, i) => {
@@ -132,7 +119,7 @@ module.exports = {
   data,
   async execute(interaction) {
     await interaction.deferReply()
-    const User = await getByDiscordId(interaction.user.id)
+    const User = await getById(interaction.user.id)
     if (interaction.options.getSubcommand() === 'latest') {
       const workout = await getUserLatestWorkout(User.hevyUsername)
 
