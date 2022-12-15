@@ -14,6 +14,18 @@ const upsertGuild = async (id) => {
   })
 }
 
+const setWorkoutChannel = async (id, channelId) => {
+  return await prisma.guild.update({
+    where: {
+      id,
+    },
+    data: {
+      workoutChannelId: channelId,
+    },
+  })
+}
+
 module.exports = {
   upsertGuild,
+  setWorkoutChannel,
 }

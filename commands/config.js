@@ -1,4 +1,9 @@
-const { SlashCommandBuilder, ChannelType } = require('discord.js')
+const {
+  SlashCommandBuilder,
+  ChannelType,
+  channelMention,
+} = require('discord.js')
+const { setWorkoutChannel } = require('../modules/guild')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,5 +25,16 @@ module.exports = {
         )
     ),
 
-  async execute(interaction) {},
+  async execute(interaction) {
+    await interaction.deferReply()
+    const channelId = interaction.options.getChannel('target').id
+    await setWorkoutChannel(interaction.guild.id, channelId)
+
+    await interaction.editReply({
+      content: `All good, members' workouts will be posted in ${channelMention(
+        channelId
+      )}`,
+      ephemeral: true,
+    })
+  },
 }
