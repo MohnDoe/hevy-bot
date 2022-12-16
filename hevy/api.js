@@ -11,7 +11,7 @@ const HevyAPIClient = axios.create({
 })
 
 const getUserLatestWorkout = async (username) => {
-  const workouts = await getUserWorkouts(username, 1, 1).length
+  const workouts = await getUserWorkouts(username, 1, 1)
   return workouts[0] ?? null
 }
 

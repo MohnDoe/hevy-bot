@@ -69,9 +69,43 @@ const getById = async (id) => {
   })
 }
 
+const getVerifiedUsers = async (perPage = 50, page = 1) => {
+  return await prisma.user.findMany({
+    skip: (page - 1) * perPage,
+    take: perPage,
+    where: {
+      isVerified: true,
+    },
+  })
+}
+
+const checkIfWorkoutWasSharedBefore = async (wHevyId, sharedType = 'cron') => {
+  return await prisma.workoutShares.findFirst({
+    where: {
+      workoutId: wHevyId,
+      sharedType,
+    },
+  })
+}
+
+const getUsersGuilds = async (userId) => {
+  return await prisma.usersGuilds.findMany({
+    where: {
+      userId,
+      shareWorkouts: true,
+    },
+    include: {
+      guild: true,
+    },
+  })
+}
+
 module.exports = {
   verifyUser,
   getById,
   connectGuild,
   upsertUser,
+  getVerifiedUsers,
+  checkIfWorkoutWasSharedBefore,
+  getUsersGuilds,
 }
