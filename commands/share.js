@@ -51,12 +51,19 @@ module.exports = {
     if (interaction.options.getSubcommand() === 'latest') {
       const workout = await getUserLatestWorkout(User.hevyUsername)
 
-      const embeds = [embedWorkout(workout)]
+      if (workout) {
+        const embeds = [embedWorkout(workout)]
 
-      await interaction.editReply({
-        content: `<@${interaction.user.id}> latest workout.`,
-        embeds,
-      })
+        await interaction.editReply({
+          content: `<@${interaction.user.id}> latest workout.`,
+          embeds,
+        })
+      } else {
+        await interaction.editReply({
+          content: 'No workout found.',
+          ephemeral: true,
+        })
+      }
     } else if (interaction.options.getSubcommand() === 'list') {
       const workouts = await getUserWorkouts(User.hevyUsername, 1, 24)
 
