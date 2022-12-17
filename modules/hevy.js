@@ -78,9 +78,12 @@ const setToString = (s, i) => {
     }
   } else if (s.duration_seconds) {
     if (s.distance_meters) {
-      string += `${s.distance_meters}m`
+      string += `${s.distance_meters / 1000}km`
     }
-    string += ` - ${s.duration_seconds} seconds`
+    const duration = dayjs.duration(s.duration_seconds, 'seconds')
+    string += ` - ${duration.format(
+      `m${duration.get('seconds') > 0 ? '[:]s' : ''}[min]`
+    )}`
   }
 
   if (indicator[s.indicator]) {
@@ -93,14 +96,15 @@ const setToString = (s, i) => {
       .map((pr) => {
         switch (pr.type) {
           case 'best_distance':
-            return `Best Distance [${pr.value}m]`
+            return `Best Distance (${pr.value / 1000}km)`
           case 'best_weight':
-            return `Best Weight [${pr.value} Kg]`
+            return `Best Weight (${pr.value} Kg)`
           default:
             return 'Personal Best'
         }
       })
       .join(' | ')
+    string += ``
   }
 
   return string
