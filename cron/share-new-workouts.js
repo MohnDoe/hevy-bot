@@ -23,7 +23,7 @@ client.once('ready', async () => {
 const execute = async () => {
   console.log('execute')
   const Users = await getVerifiedUsers(50, 1)
-  console.log('Users fetched')
+  console.log('Users fetched', Users.length)
   // for each users get latest Hevy workouts
 
   await Promise.each(Users, async (user) => {

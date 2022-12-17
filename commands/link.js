@@ -23,6 +23,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
+    await interaction.deferReply({ ephemeral: true })
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId(ConfirmButtonId)
@@ -45,7 +46,7 @@ module.exports = {
     await connectGuild(userId, guildId)
 
     // check if Discord user exist in DB
-    const sentMessage = await interaction.reply({
+    const sentMessage = await interaction.editReply({
       ephemeral: true,
       content: `To verfy that you are in fact *@${targetHevyUser}* on Hevy, please follow **@HevyBot** here <https://www.hevy.com/user/hevybot> and press confirm to continue.`,
       components: [row],

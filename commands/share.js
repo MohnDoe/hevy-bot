@@ -46,7 +46,6 @@ const data = new SlashCommandBuilder()
 module.exports = {
   data,
   async execute(interaction) {
-    await interaction.deferReply()
     const User = await getById(interaction.user.id)
     if (interaction.options.getSubcommand() === 'latest') {
       const workout = await getUserLatestWorkout(User.hevyUsername)
@@ -54,13 +53,14 @@ module.exports = {
       if (workout) {
         const embeds = [embedWorkout(workout)]
 
-        await interaction.editReply({
+        await interaction.reply({
           content: `<@${interaction.user.id}> latest workout.`,
           embeds,
+          ephemeral: false,
         })
       } else {
-        await interaction.editReply({
-          content: 'No workout found.',
+        await interaction.reply({
+          content: 'No latest workout found.',
           ephemeral: true,
         })
       }
@@ -86,7 +86,7 @@ module.exports = {
           )
       )
 
-      const sentMessage = await interaction.editReply({
+      const sentMessage = await interaction.reply({
         content: 'Select a workout to share.',
         components: [row],
         ephemeral: true,
@@ -108,11 +108,12 @@ module.exports = {
           console.log(associatedWorkout)
 
           const embeds = [embedWorkout(associatedWorkout)]
-
-          await interaction.editReply({
+          await interaction.deleteReply()
+          await interaction.channel.send({
             content: `<@${interaction.user.id}> shared a workout.`,
             embeds,
             components: [],
+            ephemeral: false,
           })
         }
       })
