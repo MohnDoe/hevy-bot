@@ -13,8 +13,12 @@ dayjs.extend(relativeTime)
 dayjs.extend(duration)
 dayjs.extend(localizedFormat)
 const { getById } = require('../modules/user')
-const { getUserLatestWorkout, getUserWorkouts } = require('../hevy/api')
-const { embedWorkout } = require('../modules/hevy')
+const {
+  getUserLatestWorkout,
+  getUserWorkouts,
+  getWorkoutById,
+} = require('../hevy/api')
+const { embedWorkout, extractWorkoutId } = require('../modules/hevy')
 
 const data = new SlashCommandBuilder()
   .setName('share')
@@ -24,6 +28,19 @@ const data = new SlashCommandBuilder()
   )
   .addSubcommand((sc) =>
     sc.setName('list').setDescription('Select from a list')
+  )
+  .addSubcommand((sc) =>
+    sc
+      .setName('link')
+      .setDescription('Share from a Hevy link')
+      .addStringOption((o) =>
+        o
+          .setName('link')
+          .setDescription(
+            'Workout link. Exampple : https://www.hevy.com/workout/04bm4DqyqNN'
+          )
+          .setRequired(true)
+      )
   )
 
 module.exports = {
@@ -92,6 +109,33 @@ module.exports = {
           })
         }
       })
+    } else if (interaction.options.getSubcommand() === 'link') {
+      const workoutId = extractWorkoutId(
+        interaction.options.getString('link').trim()
+      )
+      console.log(workoutId)
+      if (workoutId) {
+        const workout = await getWorkoutById(workoutId)
+
+        if (workout) {
+          const embeds = [embedWorkout(workout)]
+
+          await interaction.editReply({
+            content: `<@${interaction.user.id}> latest workout.`,
+            embeds,
+          })
+        } else {
+          await interaction.editReply({
+            content: `This workout doesn't seem to exist.`,
+            ephemeral: true,
+          })
+        }
+      } else {
+        await interaction.editReply({
+          content: `Please provide a correct Hevy link.`,
+          ephemeral: true,
+        })
+      }
     }
   },
 }

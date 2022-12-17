@@ -47,10 +47,19 @@ const unfollowUser = async (username) => {
   return
 }
 
+const getWorkoutById = async (workoutId) => {
+  const hevyResponse = await HevyAPIClient.get(
+    `${HEVY_URL}workout/${workoutId}`
+  )
+
+  return hevyResponse.data
+}
+
 module.exports = {
   getUserLatestWorkout,
   followUser,
   unfollowUser,
   checkIfUserFollowingBot,
   getUserWorkouts,
+  getWorkoutById,
 }

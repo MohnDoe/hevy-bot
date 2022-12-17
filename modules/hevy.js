@@ -124,6 +124,19 @@ const exerciseToField = (e) => {
   }
 }
 
+const extractWorkoutId = (url) => {
+  console.log(url)
+  const workoutIDRegex = /^(?=.*hevy)([A-Za-z0-9]+)$/
+  const match = url.match(workoutIDRegex)
+  console.log(match)
+  if (match) {
+    return match[1]
+  } else {
+    return null
+  }
+}
+
 module.exports = {
   embedWorkout,
+  extractWorkoutId,
 }
