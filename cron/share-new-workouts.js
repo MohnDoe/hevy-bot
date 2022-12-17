@@ -1,4 +1,4 @@
-const { GatewayIntentBits, Client } = require('discord.js')
+const { GatewayIntentBits, Client, ActivityType } = require('discord.js')
 const Promise = require('bluebird')
 const { token } = require('../config.json')
 const { getUserLatestWorkout } = require('../hevy/api')
@@ -16,7 +16,9 @@ client.login(token)
 
 client.once('ready', async () => {
   console.log('client ready')
+  client.user.setActivity('for new workouts', { type: ActivityType.Watching })
   await execute()
+  client.user.setActivity()
   process.exit(0)
 })
 
