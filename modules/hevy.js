@@ -60,16 +60,24 @@ const embedWorkout = (w) => {
     .setThumbnail(w.image_urls.length ? w.image_urls[0] : null)
     .addFields(w.exercises.map((e) => exerciseToField(e)))
     .setTimestamp(new Date(w.created_at))
+    .setFooter({
+      text: `${integerToPositionString(w.nth_workout)} workout`,
+    })
 }
 
-const setToString = (s, i) => {
+const setToString = (s, i, showSetNumber = true) => {
   const indicator = {
     normal: null,
     warmup: '[Warmup]',
     dropset: '[Dropset]',
     failure: '[Failure]',
   }
-  let string = `Set ${i}: `
+
+  let string = ''
+  if (showSetNumber) {
+    string += `Set ${i}: `
+  }
+
   if (s.reps) {
     if (s.weight_kg) {
       string += `${s.weight_kg}kg x ${s.reps}`
@@ -85,6 +93,10 @@ const setToString = (s, i) => {
       `m${duration.get('seconds') > 0 ? '[:]s' : ''}[min]`
     )}`
   }
+
+  // if (s.rpe) {
+  //   string += ` @ *RPE ${s.rpe}*`
+  // }
 
   if (indicator[s.indicator]) {
     string += ` **${indicator[s.indicator]}**`
@@ -113,14 +125,16 @@ const setToString = (s, i) => {
 const exerciseToField = (e) => {
   let title = e.title
   const volume = getExerciseVolume(e)
-
+  const showSetNumber = e.sets.length > 1
   if (volume > 0) {
     title += ` [${new Intl.NumberFormat('en-US').format(volume)} Kg]`
   }
 
   return {
     name: title,
-    value: e.sets.map((s, i) => setToString(s, i + 1)).join('\n'),
+    value: e.sets
+      .map((s, i) => setToString(s, i + 1, showSetNumber))
+      .join('\n'),
   }
 }
 
@@ -134,6 +148,14 @@ const extractWorkoutId = (url) => {
   } else {
     return null
   }
+}
+
+const integerToPositionString = (number) => {
+  const suffixes = ['th', 'st', 'nd', 'rd']
+  const value = number % 100
+  return (
+    number + (suffixes[(value - 20) % 10] || suffixes[value] || suffixes[0])
+  )
 }
 
 module.exports = {
