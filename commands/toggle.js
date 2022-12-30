@@ -5,6 +5,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('toggle')
     .setDescription('Toggle auto-sharing your new workouts on this server')
+    .setDMPermission(false)
     .addBooleanOption((o) =>
       o.setName('share').setDescription('Toggle on or off').setRequired(true)
     )

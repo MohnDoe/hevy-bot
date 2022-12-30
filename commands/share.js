@@ -3,6 +3,7 @@ const {
   ActionRowBuilder,
   StringSelectMenuBuilder,
   ComponentType,
+  PermissionFlagsBits,
 } = require('discord.js')
 
 const dayjs = require('dayjs')
@@ -23,6 +24,8 @@ const { embedWorkout, extractWorkoutId } = require('../modules/hevy')
 const data = new SlashCommandBuilder()
   .setName('share')
   .setDescription('Share one of your workouts')
+  .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
+  .setDMPermission(false)
   .addSubcommand((sc) =>
     sc.setName('latest').setDescription('Share your last workout')
   )

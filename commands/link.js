@@ -20,6 +20,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('link')
     .setDescription('Set-up your Hevy account')
+    .setDMPermission(false)
     .addStringOption((option) =>
       option
         .setName('username')
