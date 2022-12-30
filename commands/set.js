@@ -7,8 +7,8 @@ const { setWorkoutChannel } = require('../modules/guild')
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('config')
-    .setDescription('Configure Hevy Bot')
+    .setName('set')
+    .setDescription('General Hevy Bot settings for your server')
 
     .addSubcommand((sc) =>
       sc
@@ -19,14 +19,15 @@ module.exports = {
         .addChannelOption((option) =>
           option
             .setName('target')
-            .setDescription('The channel')
+            .setDescription(
+              "The text channel where the member' workout are shared."
+            )
             .addChannelTypes(ChannelType.GuildText)
             .setRequired(true)
         )
     ),
 
   async execute(interaction) {
-    await interaction.deferReply()
     const channelId = interaction.options.getChannel('target').id
     await setWorkoutChannel(interaction.guild.id, channelId)
 

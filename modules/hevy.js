@@ -38,7 +38,7 @@ const embedWorkout = (w) => {
     .addFields(
       {
         name: 'Duration',
-        value: `${duration.format('H[h] m[m]')}`,
+        value: `${duration.format('H[h] mm[m]')}`,
         inline: true,
       },
       {
@@ -90,7 +90,7 @@ const setToString = (s, i, showSetNumber = true) => {
     }
     const duration = dayjs.duration(s.duration_seconds, 'seconds')
     string += ` - ${duration.format(
-      `m${duration.get('seconds') > 0 ? '[:]s' : ''}[min]`
+      `m${duration.get('seconds') > 0 ? '[:]ss' : ''}[min]`
     )}`
   }
 

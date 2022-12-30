@@ -19,6 +19,16 @@ const verifyUser = async (id, hevyUsername) => {
   })
 }
 
+const checkIfUserIsVerified = async (id, hevyUsername) => {
+  return await prisma.user.findFirst({
+    where: {
+      id,
+      hevyUsername,
+      isVerified: true,
+    },
+  })
+}
+
 const upsertUser = async (id) => {
   return await prisma.user.upsert({
     where: {
@@ -132,4 +142,5 @@ module.exports = {
   checkIfWorkoutWasSharedBefore,
   getUsersGuilds,
   setShareOptionForGuilds,
+  checkIfUserIsVerified,
 }

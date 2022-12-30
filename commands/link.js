@@ -7,7 +7,12 @@ const {
 
 const { checkIfUserFollowingBot, followUser } = require('../hevy/api')
 const { upsertGuild } = require('../modules/guild')
-const { verifyUser, upsertUser, connectGuild } = require('../modules/user')
+const {
+  verifyUser,
+  upsertUser,
+  connectGuild,
+  checkIfUserIsVerified,
+} = require('../modules/user')
 
 const ConfirmButtonId = 'confirmButton'
 
@@ -38,48 +43,56 @@ module.exports = {
     const userId = interaction.user.id
     const guildId = interaction.guild.id
 
-    console.log(interaction.guild)
-    console.log(interaction.user)
-
     await upsertUser(userId)
     await upsertGuild(guildId)
     await connectGuild(userId, guildId)
 
     // check if Discord user exist in DB
-    const sentMessage = await interaction.editReply({
-      ephemeral: true,
-      content: `To verfy that you are in fact *@${targetHevyUser}* on Hevy, please follow **@HevyBot** here <https://www.hevy.com/user/hevybot> and press confirm to continue.`,
-      components: [row],
-    })
+    const isUserVerified = await checkIfUserIsVerified(userId, targetHevyUser)
 
-    const filter = (i) =>
-      i.customId === ConfirmButtonId && i.user.id === interaction.user.id
+    if (isUserVerified) {
+      await interaction.editReply({
+        ephemeral: true,
+        content:
+          'You are already verified. Your workouts will be shared on this server.',
+      })
+    } else {
+      const sentMessage = await interaction.editReply({
+        ephemeral: true,
+        content: `To verfy that you are in fact *@${targetHevyUser}* on Hevy, please follow **@HevyBot** here <https://www.hevy.com/user/hevybot> and press confirm to continue.`,
+        components: [row],
+      })
 
-    const collector = sentMessage.createMessageComponentCollector({
-      filter,
-      time: 15000,
-    })
+      const filter = (i) =>
+        i.customId === ConfirmButtonId && i.user.id === interaction.user.id
 
-    collector.on('collect', async (i) => {
-      //should check for follow now
-      const didFollow = await checkIfUserFollowingBot(targetHevyUser)
-      //if success
-      if (didFollow) {
-        await followUser(targetHevyUser)
-        await verifyUser(userId, targetHevyUser)
-        await i.update({
-          content: 'You are all set.',
-          components: [],
-          ephemeral: true,
-        })
-      } else {
-        // failed
-        await i.update({
-          content: 'You did not do it YO!',
-          ephemeral: true,
-          components: [row],
-        })
-      }
-    })
+      const collector = sentMessage.createMessageComponentCollector({
+        filter,
+        time: 15000,
+      })
+
+      collector.on('collect', async (i) => {
+        //should check for follow now
+        const didFollow = await checkIfUserFollowingBot(targetHevyUser)
+        //if success
+        if (didFollow) {
+          await followUser(targetHevyUser)
+          await verifyUser(userId, targetHevyUser)
+          await i.update({
+            content:
+              'You are now verified. You can name use commands such as `/share [latest|list]`.\nYour workouts will be shared on this server on the dedicated channel, you can toggle the sharing by using the command `/toggle` at any point.',
+            components: [],
+            ephemeral: true,
+          })
+        } else {
+          // failed
+          await i.update({
+            content: 'You did not do it YO!',
+            ephemeral: true,
+            components: [row],
+          })
+        }
+      })
+    }
   },
 }
