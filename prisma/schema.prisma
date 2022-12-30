@@ -15,7 +15,6 @@ model User {
   hevyUsername String?       @unique
   isVerified   Boolean       @default(false)
   guilds       UsersGuilds[]
-  hevyWorkouts HevyWorkout[]
 }
 
 model Guild {
@@ -36,16 +35,7 @@ model UsersGuilds {
   @@id([userId, guildId])
 }
 
-model HevyWorkout {
-  id            String             @id
-  hevyShortId   String          @unique
-  user          User            @relation(fields: [userId], references: [id])
-  userId        String
-  WorkoutShares WorkoutShares[]
-}
-
 model WorkoutShares {
-  workout    HevyWorkout @relation(fields: [workoutId], references: [id])
   workoutId  String
   guild      Guild       @relation(fields: [guildId], references: [id])
   guildId    String

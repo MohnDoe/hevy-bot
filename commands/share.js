@@ -100,12 +100,9 @@ module.exports = {
         if (i.customId === 'workoutSelect') {
           const workoutShortId = i.values[0]
 
-          console.log(i.values)
           const associatedWorkout = workouts.find(
             (w) => w.short_id === workoutShortId
           )
-
-          console.log(associatedWorkout)
 
           const embeds = [embedWorkout(associatedWorkout)]
           await interaction.deleteReply()

@@ -6,6 +6,7 @@ const {
   getVerifiedUsers,
   checkIfWorkoutWasSharedBefore,
   getUsersGuilds,
+  addWorkoutShare,
 } = require('../modules/user')
 const { embedWorkout } = require('../modules/hevy')
 
@@ -37,13 +38,8 @@ const execute = async () => {
         'cron'
       )
 
-      console.log(wasSharedByCronBefore)
-
       if (!wasSharedByCronBefore) {
-        //share it
-        //fetch users' guilds and share it there
         const userGuilds = await getUsersGuilds(user.id)
-        console.log(userGuilds)
 
         await Promise.each(userGuilds, async (userGuild) => {
           console.log(userGuild)
@@ -56,7 +52,13 @@ const execute = async () => {
             content: `<@${user.id}> completed a workout.`,
             embeds,
           })
-          // add as shared
+
+          await addWorkoutShare(
+            latestWorkout.id,
+            userGuild.guild.id,
+            userGuild.guild.workoutChannelId,
+            'cron'
+          )
         })
       }
     }

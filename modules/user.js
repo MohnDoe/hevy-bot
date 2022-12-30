@@ -124,11 +124,21 @@ const setShareOptionForGuilds = async (userId, guildId, shareWorkouts) => {
     }
   }
 
-  console.log(where)
   return await prisma.usersGuilds.updateMany({
     where,
     data: {
       shareWorkouts,
+    },
+  })
+}
+
+const addWorkoutShare = async (workoutId, guildId, channelId, sharedType) => {
+  return await prisma.workoutShares.create({
+    data: {
+      guildId,
+      channelId,
+      sharedType,
+      workoutId,
     },
   })
 }
@@ -143,4 +153,5 @@ module.exports = {
   getUsersGuilds,
   setShareOptionForGuilds,
   checkIfUserIsVerified,
+  addWorkoutShare,
 }
