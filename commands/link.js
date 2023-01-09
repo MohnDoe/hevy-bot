@@ -29,6 +29,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
+    console.log(interaction)
     await interaction.deferReply({ ephemeral: true })
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()

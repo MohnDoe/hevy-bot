@@ -80,13 +80,13 @@ const setToString = (s, i, showSetNumber = true) => {
 
   if (s.reps) {
     if (s.weight_kg) {
-      string += `${s.weight_kg}kg x ${s.reps}`
+      string += `${s.weight_kg} kg x ${s.reps}`
     } else {
       string += `${s.reps} reps`
     }
   } else if (s.duration_seconds) {
     if (s.distance_meters) {
-      string += `${s.distance_meters / 1000}km`
+      string += `${s.distance_meters / 1000} km`
     }
     const duration = dayjs.duration(s.duration_seconds, 'seconds')
     string += ` - ${duration.format(
@@ -108,9 +108,9 @@ const setToString = (s, i, showSetNumber = true) => {
       .map((pr) => {
         switch (pr.type) {
           case 'best_distance':
-            return `Best Distance (${pr.value / 1000}km)`
+            return `Best Distance (${pr.value / 1000} km)`
           case 'best_weight':
-            return `Best Weight (${pr.value} Kg)`
+            return `Best Weight (${pr.value} kg)`
           default:
             return 'Personal Best'
         }
@@ -122,12 +122,41 @@ const setToString = (s, i, showSetNumber = true) => {
   return string
 }
 
+const supersetPrefixes = [
+  '🟪',
+  '🟩',
+  '🟥',
+  '🟨',
+  '⬛',
+  '🟧',
+  '🟦',
+  '🟫',
+  '⬜',
+  '🟣',
+  '🟢',
+  '🔴',
+  '🟡',
+  '⚫',
+  '🟠',
+  '🔵',
+  '🟤',
+  '⚪',
+]
+
 const exerciseToField = (e) => {
-  let title = e.title
+  let title = ''
+
+  if (e.superset_id !== null) {
+    title += supersetPrefixes[e.superset_id]
+      ? `${supersetPrefixes[e.superset_id]} `
+      : ''
+  }
+
+  title += e.title
   const volume = getExerciseVolume(e)
   const showSetNumber = e.sets.length > 1
   if (volume > 0) {
-    title += ` [${new Intl.NumberFormat('en-US').format(volume)} Kg]`
+    title += ` [${new Intl.NumberFormat('en-US').format(volume)} kg]`
   }
 
   return {

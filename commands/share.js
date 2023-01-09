@@ -32,25 +32,27 @@ const data = new SlashCommandBuilder()
   .addSubcommand((sc) =>
     sc.setName('list').setDescription('Select from a list')
   )
-  .addSubcommand((sc) =>
-    sc
-      .setName('link')
-      .setDescription('Share from a Hevy link')
-      .addStringOption((o) =>
-        o
-          .setName('link')
-          .setDescription(
-            'Workout link. Exampple : https://www.hevy.com/workout/04bm4DqyqNN'
-          )
-          .setRequired(true)
-      )
-  )
+// .addSubcommand((sc) =>
+//   sc
+//     .setName('link')
+//     .setDescription('Share from a Hevy link')
+//     .addStringOption((o) =>
+//       o
+//         .setName('link')
+//         .setDescription(
+//           'Workout link. Exampple : https://www.hevy.com/workout/04bm4DqyqNN'
+//         )
+//         .setRequired(true)
+//     )
+// )
 
 module.exports = {
   data,
   async execute(interaction) {
+    console.log(interaction)
     const User = await getById(interaction.user.id)
     if (interaction.options.getSubcommand() === 'latest') {
+      // should check if user is verified first
       const workout = await getUserLatestWorkout(User.hevyUsername)
 
       if (workout) {
@@ -68,6 +70,7 @@ module.exports = {
         })
       }
     } else if (interaction.options.getSubcommand() === 'list') {
+      // should check if user is verified first
       const workouts = await getUserWorkouts(User.hevyUsername, 1, 24)
 
       const row = new ActionRowBuilder().addComponents(
@@ -121,7 +124,6 @@ module.exports = {
       const workoutId = extractWorkoutId(
         interaction.options.getString('link').trim()
       )
-      console.log(workoutId)
       if (workoutId) {
         const workout = await getWorkoutById(workoutId)
 

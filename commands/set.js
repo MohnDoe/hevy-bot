@@ -29,6 +29,10 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
     .setDMPermission(false),
   async execute(interaction) {
+    console.log(interaction)
+    await interaction.deferReply({
+      ephemeral: true,
+    })
     const channelId = interaction.options.getChannel('target').id
     await setWorkoutChannel(interaction.guild.id, channelId)
 

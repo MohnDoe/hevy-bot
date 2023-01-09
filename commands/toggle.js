@@ -16,6 +16,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
+    console.log(interaction)
     await interaction.deferReply({
       ephemeral: true,
     })
