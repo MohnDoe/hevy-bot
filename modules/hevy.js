@@ -8,6 +8,7 @@ const getExerciseVolume = (ex) => {
 }
 
 const embedWorkout = (w) => {
+  console.log(w)
   const setCount = w.exercises.reduce((acc, ex) => acc + ex.sets.length, 0)
 
   const prCount = w.exercises.reduce(
@@ -20,7 +21,7 @@ const embedWorkout = (w) => {
 
   const duration = dayjs.duration(w.end_time - w.start_time, 'seconds')
 
-  return new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setTitle(w.name)
     .setURL(`https://www.hevy.com/workout/${w.short_id}`)
     .setAuthor({
@@ -35,34 +36,44 @@ const embedWorkout = (w) => {
           : null
         : null
     )
-    .addFields(
-      {
-        name: 'Duration',
-        value: `${duration.format('H[h] mm[m]')}`,
-        inline: true,
-      },
-      {
-        name: 'Volume',
-        value: `${new Intl.NumberFormat('en-US').format(volume)} Kg`,
-        inline: true,
-      },
-      {
-        name: 'Sets',
-        value: setCount + '',
-        inline: true,
-      },
-      {
-        name: 'Records',
-        value: prCount + ' 🏆',
-        inline: true,
-      }
-    )
+    .addFields({
+      name: 'Duration',
+      value: `${duration.format('H[h] mm[m]')}`,
+      inline: true,
+    })
+
+  if (volume > 0) {
+    embed.addFields({
+      name: 'Volume',
+      value: `${new Intl.NumberFormat('en-US').format(volume)} Kg`,
+      inline: true,
+    })
+  }
+  if (setCount > 0) {
+    embed.addFields({
+      name: 'Sets',
+      value: setCount + '',
+      inline: true,
+    })
+  }
+
+  if (prCount > 0) {
+    embed.addFields({
+      name: 'Records',
+      value: prCount + ' 🏆',
+      inline: true,
+    })
+  }
+
+  embed
     .setThumbnail(w.image_urls.length ? w.image_urls[0] : null)
     .addFields(w.exercises.map((e) => exerciseToField(e)))
-    .setTimestamp(new Date(w.created_at))
+    .setTimestamp(w.start_time * 1000)
     .setFooter({
       text: `${integerToPositionString(w.nth_workout)} workout`,
     })
+
+  return embed
 }
 
 const setToString = (s, i, showSetNumber = true) => {

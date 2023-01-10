@@ -61,7 +61,7 @@ module.exports = {
     } else {
       const sentMessage = await interaction.editReply({
         ephemeral: true,
-        content: `To verfy that you are in fact *@${targetHevyUser}* on Hevy, please follow **@HevyBot** here <https://www.hevy.com/user/hevybot> and press confirm to continue.`,
+        content: `To verify that you are in fact *@${targetHevyUser}* on Hevy, please follow **@HevyBot** here <https://www.hevy.com/user/hevybot> and press confirm to continue.`,
         components: [row],
       })
 

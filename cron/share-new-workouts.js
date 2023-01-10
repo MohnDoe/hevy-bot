@@ -32,6 +32,8 @@ const execute = async () => {
   await Promise.each(Users, async (user) => {
     const latestWorkout = await getUserLatestWorkout(user.hevyUsername)
     if (latestWorkout) {
+      //check if workout is not too old
+
       //check if workout was shared via this cron job
       const wasSharedByCronBefore = await checkIfWorkoutWasSharedBefore(
         latestWorkout.id,
