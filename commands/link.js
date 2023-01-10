@@ -19,12 +19,14 @@ const ConfirmButtonId = 'confirmButton'
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('link')
-    .setDescription('Set-up your Hevy account')
+    .setDescription(
+      'Set-up your Hevy account in order to be able to share your workouts.'
+    )
     .setDMPermission(false)
     .addStringOption((option) =>
       option
         .setName('username')
-        .setDescription('Hevy username')
+        .setDescription('Your Hevy username')
         .setRequired(true)
     ),
 
@@ -55,13 +57,12 @@ module.exports = {
     if (isUserVerified) {
       await interaction.editReply({
         ephemeral: true,
-        content:
-          'You are already verified. Your workouts will be shared on this server.',
+        content: `You are already verified as @${targetHevyUser}. :)`,
       })
     } else {
       const sentMessage = await interaction.editReply({
         ephemeral: true,
-        content: `To verify that you are in fact *@${targetHevyUser}* on Hevy, please follow **@HevyBot** here <https://www.hevy.com/user/hevybot> and press confirm to continue.`,
+        content: `To verify that you are in fact __@${targetHevyUser}__ on Hevy, please follow **@HevyBot** on Hevy <https://www.hevy.com/user/hevybot> and press confirm to continue.`,
         components: [row],
       })
 
@@ -82,14 +83,15 @@ module.exports = {
           await verifyUser(userId, targetHevyUser)
           await i.update({
             content:
-              'You are now verified. You can name use commands such as `/share [latest|list]`.\nYour workouts will be shared on this server on the dedicated channel, you can toggle the sharing by using the command `/toggle` at any point.',
+              'You are now verified. You can name use commands such as `/share [latest|list]`.',
             components: [],
             ephemeral: true,
           })
         } else {
           // failed
           await i.update({
-            content: 'You did not do it YO!',
+            content:
+              'Unable to verify your Hevy identity. Please make sure to follow **@HevyBot** on Hevy <https://www.hevy.com/user/hevybot> and then click the button.',
             ephemeral: true,
             components: [row],
           })

@@ -23,14 +23,16 @@ const { embedWorkout, extractWorkoutId } = require('../modules/hevy')
 
 const data = new SlashCommandBuilder()
   .setName('share')
-  .setDescription('Share one of your workouts')
+  .setDescription('Share one of your workouts on this channel now')
   .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
   .setDMPermission(false)
   .addSubcommand((sc) =>
-    sc.setName('latest').setDescription('Share your last workout')
+    sc.setName('latest').setDescription('Share your last finished workout.')
   )
   .addSubcommand((sc) =>
-    sc.setName('list').setDescription('Select from a list')
+    sc
+      .setName('list')
+      .setDescription('Select one from a list of recent workouts.')
   )
 // .addSubcommand((sc) =>
 //   sc

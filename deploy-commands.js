@@ -2,11 +2,18 @@ const { REST, Routes } = require('discord.js')
 const { clientId, token } = require('./config.json')
 const fs = require('node:fs')
 
+let commandsInDevelopment = ['set', 'toggle']
+
+commandsInDevelopment = commandsInDevelopment.map((file) => file + '.js')
+
+console.log('Commands in dev', commandsInDevelopment)
+
 const commands = []
 // Grab all the command files from the commands directory you created earlier
 const commandFiles = fs
   .readdirSync('./commands')
   .filter((file) => file.endsWith('.js'))
+  .filter((file) => !commandsInDevelopment.includes(file))
 
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
 for (const file of commandFiles) {
