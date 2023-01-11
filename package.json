@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx prisma migrate deploy; npx prisma generate",
+    "release": "npx prisma migrate deploy; npx prisma generate",
     "start": "node index.js",
     "deploy-commands": "node deploy-commands.js",
     "share-workouts": "node cron/share-new-workouts.js"
