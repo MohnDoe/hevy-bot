@@ -6,6 +6,8 @@
   "scripts": {
     "build": " npx prisma migrate deploy; npx prisma generate;",
     "start": "node index.js",
+    "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=;",
+    "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;",
     "deploy-commands": "node deploy-commands.js",
     "share-workouts": "node cron/share-new-workouts.js"
   },
