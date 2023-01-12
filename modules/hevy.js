@@ -79,7 +79,7 @@ const embedWorkout = (w) => {
 const setToString = (s, i, showSetNumber = true) => {
   const indicator = {
     normal: null,
-    warmup: '[Warmup]',
+    warmup: '[Warm-up]',
     dropset: '[Dropset]',
     failure: '[Failure]',
   }
@@ -105,9 +105,9 @@ const setToString = (s, i, showSetNumber = true) => {
     )}`
   }
 
-  // if (s.rpe) {
-  //   string += ` @ *RPE ${s.rpe}*`
-  // }
+  if (s.rpe) {
+    string += ` @ *${s.rpe} RPE*`
+  }
 
   if (indicator[s.indicator]) {
     string += ` **${indicator[s.indicator]}**`
