@@ -106,7 +106,7 @@ const setToString = (s, i, showSetNumber = true) => {
   }
 
   if (s.rpe) {
-    string += ` @ *${s.rpe} RPE*`
+    string += ` @ *${s.rpe} rpe*`
   }
 
   if (indicator[s.indicator]) {
@@ -170,11 +170,17 @@ const exerciseToField = (e) => {
     title += ` [${new Intl.NumberFormat('en-US').format(volume)} kg]`
   }
 
+  let value = ''
+
+  if (e.notes) {
+    value += `*${e.notes}*\n`
+  }
+
   return {
     name: title,
-    value: e.sets
-      .map((s, i) => setToString(s, i + 1, showSetNumber))
-      .join('\n'),
+    value:
+      value +
+      e.sets.map((s, i) => setToString(s, i + 1, showSetNumber)).join('\n'),
   }
 }
 
