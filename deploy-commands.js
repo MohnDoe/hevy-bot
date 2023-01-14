@@ -4,7 +4,7 @@ const env = process.env.NODE_ENV || 'development'
 
 const skipDev = env === 'production'
 
-let commandsInDevelopment = ['set', 'toggle']
+let commandsInDevelopment = ['set', 'toggle', 'recap']
 
 let contextsInDevelopment = ['getAssociatedRoutine']
 
