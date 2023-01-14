@@ -4,6 +4,7 @@ const {
 } = require('discord.js')
 
 module.exports = {
+  wip: true,
   data: new ContextMenuCommandBuilder()
     .setName('Get routine')
     .setType(ApplicationCommandType.Message),

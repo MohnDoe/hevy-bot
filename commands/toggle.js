@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js')
 const { setShareOptionForGuilds } = require('../modules/user')
 
 module.exports = {
+  wip: true,
   data: new SlashCommandBuilder()
     .setName('toggle')
     .setDescription('Toggle auto-sharing your new workouts on this server')

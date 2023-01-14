@@ -4,46 +4,46 @@ const env = process.env.NODE_ENV || 'development'
 
 const skipDev = env === 'production'
 
-let commandsInDevelopment = ['set', 'toggle', 'recap']
-
-let contextsInDevelopment = ['getAssociatedRoutine']
-
-commandsInDevelopment = commandsInDevelopment.map((file) => file + '.js')
-contextsInDevelopment = contextsInDevelopment.map((file) => file + '.js')
-
-if (skipDev) {
-  console.log(
-    `Skipping ${
-      commandsInDevelopment.length + contextsInDevelopment.length
-    } commands and contexts in development`
-  )
-}
-
-console.log('Commands in dev', commandsInDevelopment)
-console.log('Contexts in dev', contextsInDevelopment)
-
 const commands = []
 const contexts = []
 // Grab all the command files from the commands directory you created earlier
 const commandFiles = fs
   .readdirSync('./commands')
   .filter((file) => file.endsWith('.js'))
-  .filter((file) => !commandsInDevelopment.includes(file) || !skipDev)
 
 const contextFiles = fs
   .readdirSync('./contexts')
   .filter((file) => file.endsWith('.js'))
-  .filter((file) => !contextsInDevelopment.includes(file) || !skipDev)
 
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+console.log('Building command list :')
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`)
-  commands.push(command.data.toJSON())
+  if (command.wip && skipDev) {
+    console.log(' - SKIPPED : ' + file)
+  } else {
+    if (command.wip) {
+      console.log(' - DEV : ' + file)
+    } else {
+      console.log(' - READY : ' + file)
+    }
+    commands.push(command.data.toJSON())
+  }
 }
 
+console.log('Building context list :')
 for (const file of contextFiles) {
   const context = require(`./contexts/${file}`)
-  contexts.push(context.data.toJSON())
+  if (context.wip && skipDev) {
+    console.log(' - SKIPPED : ' + file)
+  } else {
+    if (context.wip) {
+      console.log(' - DEV : ' + file)
+    } else {
+      console.log(' - READY : ' + file)
+    }
+    contexts.push(context.data.toJSON())
+  }
 }
 
 // Construct and prepare an instance of the REST module

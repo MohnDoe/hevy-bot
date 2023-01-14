@@ -7,6 +7,7 @@ const {
 const { setWorkoutChannel } = require('../modules/guild')
 
 module.exports = {
+  wip: true,
   data: new SlashCommandBuilder()
     .setName('set')
     .setDescription('General Hevy Bot settings for your server')
