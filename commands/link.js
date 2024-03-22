@@ -15,20 +15,24 @@ const {
 } = require('../modules/user')
 
 const ConfirmButtonId = 'confirmButton'
+const data = new SlashCommandBuilder()
+.setName('link')
+.setDescription(
+  'Set-up your Hevy account in order to be able to share your workouts.'
+)
+.setDMPermission(false)
+.addStringOption((option) =>
+  option
+    .setName('username')
+    .setDescription('Your Hevy username')
+    .setRequired(true)
+);
+
+data.integration_types = [0, 1];
+data.contexts = [0, 1, 2];
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('link')
-    .setDescription(
-      'Set-up your Hevy account in order to be able to share your workouts.'
-    )
-    .setDMPermission(false)
-    .addStringOption((option) =>
-      option
-        .setName('username')
-        .setDescription('Your Hevy username')
-        .setRequired(true)
-    ),
+  data,
 
   async execute(interaction) {
     console.log(interaction)

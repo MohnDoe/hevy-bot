@@ -16,6 +16,7 @@ const data = new SlashCommandBuilder()
     sc.setName('month').setDescription('Get a Hevy recap f this month')
   )
 
+
 module.exports = {
   wip: true,
   data,

@@ -28,6 +28,7 @@ for (const file of commandFiles) {
       console.log(' - READY : ' + file)
     }
     commands.push(command.data.toJSON())
+    console.debug(command.data.toJSON());
   }
 }
 

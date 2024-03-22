@@ -48,6 +48,9 @@ const data = new SlashCommandBuilder()
 //     )
 // )
 
+data.integration_types = [0, 1];
+data.contexts = [0, 1, 2];
+
 module.exports = {
   data,
   async execute(interaction) {
