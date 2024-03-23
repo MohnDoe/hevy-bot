@@ -74,8 +74,10 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN)
     console.log(
       `Successfully reloaded ${data.length} application (/) commands and contexts.`
     )
+    process.exit(1)
   } catch (error) {
     // And of course, make sure you catch and log any errors!
     console.error(error)
+    process.exit(1)
   }
 })()
